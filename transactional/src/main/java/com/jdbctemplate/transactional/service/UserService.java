@@ -23,16 +23,22 @@ public class UserService {
 
     @Transactional
     public void create(List<User> users) {
-        //users.forEach(jdbcTemplate::update);
+        users.forEach((user) -> jdbcTemplate.update("insert into USER (Name, Dept, Salary) values (?,?,?)",
+                preparedStatement -> {
+            preparedStatement.setString(1, user.getName());
+            preparedStatement.setString(2, user.getDept());
+            preparedStatement.setLong(3, user.getSalary());
+        }));
 
-        for (User user : users) {
-            log.info("Inserting data for User name: {}", user.getName());
-            jdbcTemplate.update("insert into USER (Name, Dept, Salary) values (?,?,?)", preparedStatement -> {
-                preparedStatement.setString(1, user.getName());
-                preparedStatement.setString(2, user.getDept());
-                preparedStatement.setLong(3, user.getSalary());
-            });
-        }
+
+//        for (User user : users) {
+//            log.info("Inserting data for User name: {}", user.getName());
+//            jdbcTemplate.update("insert into USER (Name, Dept, Salary) values (?,?,?)", preparedStatement -> {
+//                preparedStatement.setString(1, user.getName());
+//                preparedStatement.setString(2, user.getDept());
+//                preparedStatement.setLong(3, user.getSalary());
+//            });
+//        }
     }
 
     public List<User> getUsers() {
